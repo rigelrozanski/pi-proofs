@@ -69,6 +69,7 @@ func main() {
 	// area of the big curve to the area of the under triangle segment
 	//curve := Quo(six, seven)
 	curve := Quo(two, three)
+	//curve := Quo(one, two)
 
 	// number of segments
 	n := newFloat(4)
@@ -93,13 +94,19 @@ func main() {
 		AIterationRes := Add(A, Aarcs)
 
 		if i > 10 {
-			i1 := Sqrt(Sub(one, Pow2(Ls)))
+			i1 := Sqrt(Sub(one, Quo(Pow2(Ls), four)))
 			halfMinusCurve := Sub(Quo(one, two), curve)
 			i2 := Mul(halfMinusCurve, i1)
 			i3 := Mul(curve, Ls)
 			i4 := Add(i3, i2)
 			res2 := Mul(n, i4)
-			fmt.Printf("i: %v, n %v, res %v, res2 %v\n", i, &n, &AIterationRes, &res2)
+
+			i5 := Quo(Ls, two)
+			i6 := Mul(i5, i1)
+			i7 := Quo(Pow2(four), Mul(three, Ls))
+			res3 := Mul(n, Add(i6, i7))
+
+			fmt.Printf("i: %v, n %v, res %v, res2 %v, res3 %v\n", i, &n, &AIterationRes, &res2, &res3)
 		}
 
 		// set the length and number of segments for next time
