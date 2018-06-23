@@ -6,7 +6,7 @@ import (
 	"math/big"
 )
 
-const prec = 100
+const prec = 200
 
 func Mul(r1, r2 big.Float) big.Float {
 	var z *big.Float = big.NewFloat(1)
@@ -52,70 +52,69 @@ func newFloat(val float64) big.Float {
 
 func main() {
 
-	one, two, three, four, six, seven := newFloat(1), newFloat(2), newFloat(3), newFloat(4), newFloat(6), newFloat(7)
-	_, _, _, _, _, _ = one, two, three, four, six, seven
+	one, two, three, four, five, six, seven := newFloat(1), newFloat(2), newFloat(3), newFloat(4), newFloat(5), newFloat(6), newFloat(7)
+	_, _, _, _, _, _, _ = one, two, three, four, five, six, seven
 	r := newFloat(1) // unit circle radius
 	A := newFloat(2) // A0 = area of the inner square
 
-	// length of the inner side (start with the side length of the square)
-	sqrt2 := Sqrt(two)
-	Ls := sqrt2 // length side
-	//fmt.Printf("debug Ls: %v\n", &Ls)
+	// number of segments
+	n := newFloat(3) // 3 = triangle, 4 = square, 5 = pentagon
+
+	// length side
+	Ln := Quo(three, Sqrt(three)) // triangle
+	//Ln := Sqrt(two) // square
+	//Ln := Mul(two, Sqrt(Sub(one, Pow2(Quo(Add(one, Sqrt(five)), four))))) // pentagon
 
 	// inner length
-	Li := Quo(one, sqrt2) // 1/sqrt(2)
-	//fmt.Printf("debug Li: %v\n", &Li)
+	halfLn := Quo(Ln, two)
+	Li := Sqrt(Sub(r, Pow2(halfLn)))
+	//Li := Quo(one, two) // triangle
+	//Li = Quo(one, Sqrt(two)) // square
 
 	// area of the big curve to the area of the under triangle segment
 	//curve := Quo(six, seven)
-	curve := Quo(two, three)
 	//curve := Quo(one, two)
+	curve := Quo(two, three)
 
-	// number of segments
-	n := newFloat(4)
-
-	for i := 0; i < 1000; i++ {
-		//fmt.Printf("debug i: %v\n", i)
+	for i := 0; i < 100; i++ {
 
 		// height
 		h := Sub(r, Li)
-		//fmt.Printf("debug h: %v\n", &h)
 
-		halfLs := Quo(Ls, two)
-		//fmt.Printf("debug halfLs: %v\n", &halfLs)
-		Atriangle := Mul(halfLs, h)
-		//fmt.Printf("debug Atriangle: %v\n", &Atriangle)
+		Atriangle := Mul(halfLn, h)
 		Atriangles := Mul(Atriangle, n)
-		//fmt.Printf("debug Atriangles: %v\n", &Atriangles)
 		Aarcs := Mul(Atriangles, curve)
-		//fmt.Printf("debug Aarcs: %v\n", &Aarcs)
 
 		A = Add(A, Atriangles)
 		AIterationRes := Add(A, Aarcs)
 
-		if i > 10 {
-			i1 := Sqrt(Sub(one, Quo(Pow2(Ls), four)))
+		if i >= 0 {
+			i1 := Sqrt(Sub(one, Quo(Pow2(Ln), four)))
 			halfMinusCurve := Sub(Quo(one, two), curve)
 			i2 := Mul(halfMinusCurve, i1)
-			i3 := Mul(curve, Ls)
+			i3 := Mul(curve, Ln)
 			i4 := Add(i3, i2)
 			res2 := Mul(n, i4)
+			_ = res2
 
-			i5 := Quo(Ls, two)
-			i6 := Mul(i5, i1)
-			i7 := Quo(Pow2(four), Mul(three, Ls))
-			res3 := Mul(n, Add(i6, i7))
+			i5 := Quo(Mul(Pow2(Ln), Ln), Mul(three, four))
+			i6 := Quo(Ln, two)
+			i7 := Quo(Pow2(Ln), Pow2(four))
+			res3 := Mul(n, Sub(Add(i6, i5), i7))
+			//res3 := Mul(n, i5)
 
-			fmt.Printf("i: %v, n %v, res %v, res2 %v, res3 %v\n", i, &n, &AIterationRes, &res2, &res3)
+			LnSqrdDivH := Quo(Pow2(Ln), h)
+
+			fmt.Printf("i: %v, n %v, res %v, res3 %v, Ln^2/h %v\n", i, &n, &AIterationRes, &res3, &LnSqrdDivH)
 		}
 
 		// set the length and number of segments for next time
 		n = Mul(n, two)
 
-		Ls = Sqrt(Add(Pow2(h), Mul(halfLs, halfLs)))
+		Ln = Sqrt(Add(Pow2(h), Mul(halfLn, halfLn)))
 
-		halfLs = Quo(Ls, two)
-		Li = Sqrt(Sub(r, Pow2(halfLs)))
+		halfLn = Quo(Ln, two)
+		Li = Sqrt(Sub(r, Pow2(halfLn)))
 		//fmt.Printf("debug Li: %v\n", &Li)
 	}
 }
