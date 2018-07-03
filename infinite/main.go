@@ -7,15 +7,42 @@ import (
 )
 
 func main() {
-	r := newFloat(1) // unit circle radius
-	n := newFloat(4) // number of segments
-	Ln := Sqrt(two)  // length side
+	r := newFloat(1)        // unit circle radius
+	n := newFloat(4)        // number of segments
+	nInt := 4               // number of segments
+	Pi := newFloat(math.Pi) // number of segments
+	Ln := Sqrt(two)         // length side
 	halfLn := Quo(Ln, two)
 	s := Sqrt(Sub(r, Pow2(halfLn))) // inner length
 
-	for i := 0; i < 30; i++ {
+	for i := 0; i < 50; i++ {
 		h := Sub(r, s) // height
 		LnPow2DivH := Quo(Pow2(Ln), h)
+		_ = LnPow2DivH
+
+		// try to fast-forward a bunch, check this ratio
+
+		//hj := Mul(h, one) // cheap copy method
+		//nj := Mul(n, one)
+		//Lnj := Mul(Ln, one)
+		//halfLnj := Mul(halfLn, one)
+		//sj := Mul(s, one)
+		//for j := 0; j < 1000; j++ {
+		//hj = Sub(r, sj) // height
+
+		//// set the length and number of segments for next time
+		//nj = Mul(nj, two)
+		//Lnj = Sqrt(Add(Pow2(hj), Pow2(halfLnj)))
+
+		//halfLnj = Quo(Lnj, two)
+		//sj = Sqrt(Sub(r, Pow2(halfLnj)))
+		//}
+		//LnFaster := Mul(Lnj, Quo(nj, n))
+
+		//  easy way just assume Pi
+		LnFaster := Quo(Mul(two, Pi), n)
+		ratioLn := Quo(LnFaster, Ln)
+		ratioLn2 := Pow(ratioLn, i*2)
 
 		if i > 0 {
 			Pi1 := Quo(Mul(Ln, n), two)
@@ -27,12 +54,18 @@ func main() {
 			}
 			Pi2 := Quo(Mul(Ln2, n2), Pow(two, 9)) //????????? why four?
 
-			fmt.Printf("i: %v, n %v, Ln^2/h %v, Pi1 %v, Pi2 %v\n", i, &n, &LnPow2DivH, &Pi1, &Pi2)
+			Pi2 = Quo(Mul(Add(Ln, Mul(two, h)), n), two)
+			ratio := Quo(Pi1, Pi2)
+			_ = ratio
+
+			fmt.Printf("i: %v,\tn %v,\tPi1 %v,\tPi2 %v, \tLnF/Ln %v\n", i, &n, &Pi1, &Pi2, &ratioLn2)
 		}
 
 		// set the length and number of segments for next time
 		n = Mul(n, two)
+		nInt = nInt * 2
 		Ln = Sqrt(Add(Pow2(h), Pow2(halfLn)))
+
 		halfLn = Quo(Ln, two)
 		s = Sqrt(Sub(r, Pow2(halfLn)))
 	}

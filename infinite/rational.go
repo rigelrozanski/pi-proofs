@@ -15,7 +15,7 @@ var (
 	seven = newFloat(7)
 )
 
-const prec = 10000
+const prec = 100
 
 func Mul(r1, r2 big.Float) big.Float {
 	var z *big.Float = big.NewFloat(1)
