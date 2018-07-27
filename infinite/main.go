@@ -15,7 +15,7 @@ func main() {
 	halfLn := Quo(Ln, two)
 	s := Sqrt(Sub(r, Pow2(halfLn))) // inner length
 
-	for i := 0; i < 50; i++ {
+	for i := 0; i < 30; i++ {
 		h := Sub(r, s) // height
 		LnPow2DivH := Quo(Pow2(Ln), h)
 		_ = LnPow2DivH
@@ -42,7 +42,7 @@ func main() {
 		//  easy way just assume Pi
 		LnFaster := Quo(Mul(two, Pi), n)
 		ratioLn := Quo(LnFaster, Ln)
-		ratioLn2 := Pow(ratioLn, i*2)
+		ratioLn = Pow(ratioLn, (i-3)*2)
 
 		if i > 0 {
 			Pi1 := Quo(Mul(Ln, n), two)
@@ -58,7 +58,7 @@ func main() {
 			ratio := Quo(Pi1, Pi2)
 			_ = ratio
 
-			fmt.Printf("i: %v,\tn %v,\tPi1 %v,\tPi2 %v, \tLnF/Ln %v\n", i, &n, &Pi1, &Pi2, &ratioLn2)
+			fmt.Printf("i: %v,\tn %v,\tPi1 %v,\tPi2 %v, \tLnF/Ln %v\n", i, &n, &Pi1, &Pi2, &ratioLn)
 		}
 
 		// set the length and number of segments for next time
